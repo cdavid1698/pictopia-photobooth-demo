@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pictopia Photobooth — demo website
 
-## Getting Started
+A proposal demo for Pictopia Photobooth (Tarlac & Pampanga). Built with Next.js 16 (App Router), TypeScript and Tailwind CSS v4.
 
-First, run the development server:
+The site is styled as the production site would look, with no demo banner. **However, the forms are still front-end only.** Booking requests, partner enquiries and newsletter sign-ups are validated in the browser and stored only in `localStorage`; nothing reaches Pictopia. Connect `submitBookingRequest` (and the two other forms) to a real backend before sending real customers to it. There is no payment step: the business takes no deposit, so Stripe isn't used.
+
+## Run locally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev        # http://localhost:3000
+npm run build      # production build (type-checks)
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Requires Node 20.9+.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Copy `.env.example` to `.env.local`.
 
-## Learn More
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_AGENCY_NAME` | Footer credit ("Website by …"), defaults to CK David |
+| `NEXT_PUBLIC_SITE_URL` | Deployed URL, used in metadata, the sitemap and JSON-LD |
 
-To learn more about Next.js, take a look at the following resources:
+## Where things live
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Path | What |
+|---|---|
+| `content/` | All business facts, prices, FAQs and events. Each item has a `source` ID pointing into `research/sources.md`, or `sample: true` |
+| `lib/booking.ts` | Pricing, simulated availability, validation, local persistence and `.ics` generation. **Swap `isDateBooked` and `submitBookingRequest` for a real calendar/API in the paid build** |
+| `components/HoursPlanner.tsx` | The booth-hours planner (2 operating hours around a 1–2 hour pause) |
+| `components/PrintPreview.tsx`, `HeroBooth.tsx` | Hand-drawn SVG illustrations (no stock photos used) |
+| `research/`, `plan/` | Research, sources, feature map, sitemap and design plan |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Demo behaviours to know
+- Booked dates on the calendar are generated sample data (about 30% of weekends).
+- Bookings need 2 days' notice.
+- The whole site is `noindex` and `robots.txt` disallows all crawlers, so the demo never competes with the business's own pages. Remove both before launch (`app/layout.tsx` → `robots`, and `app/robots.ts`).
 
-## Deploy on Vercel
+## Deploy (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npx vercel          # preview
+npx vercel --prod   # production
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Set the two environment variables in the Vercel project settings.
