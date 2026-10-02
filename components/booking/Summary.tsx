@@ -16,7 +16,7 @@ export function describeBooking(d: BookingDraft) {
     display: d.display === "magnetic" ? "Magnetic prints" : "Standee frame",
     backdrop: `${color.name} ${d.backdropFinish} backdrop`,
     hours: `${formatClock(d.startTime)} – ${formatClock(d.startTime + onSiteHours(d.plan) * 60)}`,
-    pause: `${formatHours(pause.hours)} pause${pause.label ? ` for ${pause.label.toLowerCase()}` : ""}`,
+    pause: pause.hours === 0 ? "no pause" : `${formatHours(pause.hours)} pause${pause.label ? ` for ${pause.label.toLowerCase()}` : ""}`,
   };
 }
 
